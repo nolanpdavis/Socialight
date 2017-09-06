@@ -13,5 +13,12 @@ export default {
             type: constants.PROFILE_CREATED,
             profile: profile
         }
+    },
+
+    albumCreated: (album) => {
+        return {
+            type: constants.ALBUM_CREATED,
+            album: album
+        }
     }
 }

@@ -1,17 +1,14 @@
 var mongoose = require('mongoose')
-
-var ImageSchema = new mongoose.Schema({
-    url: {type:String, trim:true, default:''},
-    userName: {type:String, trim:true, lowercase: true, default:''},
-    location: {type:String, default:''},
-    timestamp: {type:Date, default:Date.now}
-})
+const Schema = mongoose.Schema;
 
 var ProfileSchema = new mongoose.Schema({
     userName: {type:String, trim:true, default:''},
     email: {type:String, trim:true, lowercase: true, default:''},
     password: {type:String, default:''},
-    images: [ImageSchema],
+    albums: [{
+        type: Schema.Types.ObjectId,
+        ref: 'AlbumSchema'
+    }],
     timestamp: {type:Date, default:Date.now}
 })
 
@@ -20,7 +17,7 @@ ProfileSchema.methods.summary = function(){
         id: this._id.toString(),
         userName: this.userName,
         email: this.email,
-        images: this.images,
+        albums: this.albums,
         timestamp: this.timestamp
     }
 

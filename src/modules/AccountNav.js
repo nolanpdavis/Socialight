@@ -31,6 +31,7 @@ class AccountNav extends Component {
                 return
             }
             this.props.currentUserReceived(null)
+            this.props.history.push('/')
         })
     }
 
@@ -46,7 +47,7 @@ class AccountNav extends Component {
                         </div>
                         :
                         <div>
-                            <Link to='/account'>Account</Link>
+                            <Link to='/albums'>Albums</Link>
                             <br />
                             <Link to='/' onClick={this.onLogout.bind(this)}>Log out</Link>
                         </div>

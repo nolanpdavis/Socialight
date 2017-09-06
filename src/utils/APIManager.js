@@ -37,7 +37,7 @@ export default {
 
             const confirmation = response.body.confirmation
             if (confirmation != 'success'){
-                callback({message: response.body.message}, null)
+                callback({confirmation: response.body.confirmation, message: response.body.message}, null)
                 return
             }
 

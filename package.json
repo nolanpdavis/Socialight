@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "npm run build",
-    "build": "webpack -p && webpack-dev-server",
+    "build": "webpack -w & nodemon server",
     "hot": "webpack-dev-server --hot"
   },
   "dependencies": {

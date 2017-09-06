@@ -11,7 +11,6 @@ class Account extends Component {
                 <Header />
                 <AccountNav />
                 <p>Hello, {this.props.currentUser.userName}</p>
-                <MapBoard />
                 <DropZone />
             </div>
         )

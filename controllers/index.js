@@ -1,7 +1,9 @@
 var ProfileController = require('./ProfileController')
+var AlbumController = require('./AlbumController')
 
 module.exports = {
 
-    profile: ProfileController
+    profile: ProfileController,
+    album: AlbumController
 
 }

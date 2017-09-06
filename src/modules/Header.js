@@ -6,9 +6,9 @@ export default class Header extends Component {
         return(
             <div>
                 <h1>Socialight</h1>
-                <Link to='/map'>Map</Link>
+                {/*<Link to='/map'>Map</Link>
                 <br />
-                <Link to='/'>Images</Link>
+                <Link to='/'>Images</Link>*/}
             </div>
         )
     }
