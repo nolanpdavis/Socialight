@@ -28085,11 +28085,7 @@ var DropZone = function (_Component) {
         var _this = _possibleConstructorReturn(this, (DropZone.__proto__ || Object.getPrototypeOf(DropZone)).call(this));
 
         _this.state = {
-            image: {
-                url: '',
-                userName: '',
-                location: ''
-            }
+            images: [url, userName, location]
         };
         return _this;
     }
@@ -28097,9 +28093,6 @@ var DropZone = function (_Component) {
     _createClass(DropZone, [{
         key: 'uploadFiles',
         value: function uploadFiles(files) {
-            var _this2 = this;
-
-            var image = files[0];
 
             var cloudName = 'djswgrool';
             var url = 'https://api.cloudinary.com/v1_1/' + cloudName + '/image/upload';
@@ -28118,27 +28111,30 @@ var DropZone = function (_Component) {
             };
 
             var uploadRequest = _superagent2.default.post(url);
-            uploadRequest.attach('file', image);
+            files.forEach(function (file) {
+                console.log('file', file);
+                uploadRequest.attach('file', file);
 
-            Object.keys(params).forEach(function (key) {
-                uploadRequest.field(key, params[key]);
-            });
-
-            uploadRequest.end(function (err, resp) {
-                if (err) {
-                    alert(err, null);
-                    return;
-                }
-
-                console.log('UPLOAD COMPLETE: ' + JSON.stringify(resp.body));
-                var uploaded = resp.body;
-                var imageUrl = resp.body.secure_url;
-                var images = Object.assign({}, _this2.state.image);
-                images.url = imageUrl;
-                images.currentUser = _this2.props.currentUser.userName;
-                _this2.setState({
-                    image: images
+                Object.keys(params).forEach(function (key) {
+                    uploadRequest.field(key, params[key]);
                 });
+
+                uploadRequest.end(function (err, resp) {
+                    if (err) {
+                        alert(err, null);
+                        return;
+                    }
+                    console.log('UPLOAD COMPLETE: ' + JSON.stringify(resp.body));
+                });
+
+                {/*}    const uploaded = resp.body
+                       const imageUrl = resp.body.secure_url
+                       let images = Object.assign({}, this.state.image)
+                       images.url = imageUrl
+                       images.currentUser = this.props.currentUser.userName
+                       this.setState({
+                           image: images
+                       })*/}
             });
         }
     }, {
@@ -33636,7 +33632,6 @@ var ImageBoard = function (_Component) {
                 _this2.setState({
                     images: array
                 });
-                console.log(_this2.state.images);
             });
         }
     }, {
@@ -34520,7 +34515,7 @@ var NewAlbum = function (_Component) {
 
         var _this = _possibleConstructorReturn(this, (NewAlbum.__proto__ || Object.getPrototypeOf(NewAlbum)).call(this));
 
-        _this.state = {
+        _this.uploadFile.bind(_this), _this.state = {
             name: '',
             description: '',
             images: []
@@ -34529,11 +34524,9 @@ var NewAlbum = function (_Component) {
     }
 
     _createClass(NewAlbum, [{
-        key: 'uploadFiles',
-        value: function uploadFiles(files) {
+        key: 'uploadFile',
+        value: function uploadFile(file) {
             var _this2 = this;
-
-            var image = files[0];
 
             var cloudName = 'djswgrool';
             var url = 'https://api.cloudinary.com/v1_1/' + cloudName + '/image/upload';
@@ -34552,26 +34545,34 @@ var NewAlbum = function (_Component) {
             };
 
             var uploadRequest = _superagent2.default.post(url);
-            uploadRequest.attach('file', image);
+
+            uploadRequest.attach('file', file);
 
             Object.keys(params).forEach(function (key) {
                 uploadRequest.field(key, params[key]);
             });
 
-            uploadRequest.end(function (err, resp) {
-                if (err) {
-                    alert(err, null);
-                    return;
-                }
+            uploadRequest.then(function (res) {
 
-                var uploaded = resp.body;
-                var imageUrl = resp.body.secure_url;
+                console.log('UPLOAD COMPLETE: ' + JSON.stringify(res.body));
+                var uploaded = res.body;
+                var imageUrl = res.body.secure_url;
                 var updatedArr = _this2.state.images.slice();
                 updatedArr.push(imageUrl);
                 _this2.setState({
                     images: updatedArr
                 });
+            }).catch(function (error) {
+                console.log(error);
+                return;
             });
+        }
+    }, {
+        key: 'uploadFiles',
+        value: function uploadFiles(files) {
+            for (var i = 0; i < files.length; i++) {
+                this.uploadFile(files[i]);
+            }
         }
     }, {
         key: 'postAlbum',
@@ -34625,11 +34626,10 @@ var NewAlbum = function (_Component) {
                 _react2.default.createElement('br', null),
                 _react2.default.createElement(_reactDropzone2.default, { onDrop: this.uploadFiles.bind(this) }),
                 this.state.images.map(function (image, i) {
-                    console.log(image);
                     return _react2.default.createElement(
                         'div',
                         { key: i },
-                        _react2.default.createElement('img', { src: image }),
+                        _react2.default.createElement('img', { src: image, style: { width: '300px' } }),
                         _react2.default.createElement('div', { className: 'X' })
                     );
                 }),

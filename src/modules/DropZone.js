@@ -9,16 +9,15 @@ class DropZone extends Component {
     constructor(){
         super()
         this.state = {
-            image: {
+            images: [
                 url: '',
                 userName: '',
                 location: ''
-            }
+            ]
         }
     }
 
     uploadFiles(files){
-        const image = files[0]
 
         const cloudName = 'djswgrool'
         const url = 'https://api.cloudinary.com/v1_1/'+cloudName+'/image/upload'
@@ -37,27 +36,32 @@ class DropZone extends Component {
         }
 
         let uploadRequest = superagent.post(url)
-        uploadRequest.attach('file', image)
+        files.forEach((file) => {
+            console.log('file', file)
+            uploadRequest.attach('file', file)
 
-        Object.keys(params).forEach((key) => {
-            uploadRequest.field(key, params[key])
+            Object.keys(params).forEach((key) => {
+                uploadRequest.field(key, params[key])
+            })
+
+            uploadRequest.end((err, resp) => {
+                if (err){
+                    alert(err, null)
+                    return
+                }
+            console.log('UPLOAD COMPLETE: '+JSON.stringify(resp.body))
         })
 
-        uploadRequest.end((err, resp) => {
-            if (err){
-                alert(err, null)
-                return
-            }
 
-            console.log('UPLOAD COMPLETE: '+JSON.stringify(resp.body))
-            const uploaded = resp.body
+
+        {/*}    const uploaded = resp.body
             const imageUrl = resp.body.secure_url
             let images = Object.assign({}, this.state.image)
             images.url = imageUrl
             images.currentUser = this.props.currentUser.userName
             this.setState({
                 image: images
-            })
+            })*/}
         })
 
     }

@@ -22,7 +22,6 @@ export default class ImageBoard extends Component {
             this.setState({
                 images: array
             })
-            console.log(this.state.images)
         })
     }
 

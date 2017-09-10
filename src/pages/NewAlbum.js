@@ -12,6 +12,7 @@ import { AccountNav, Header } from '../modules'
 class NewAlbum extends Component {
     constructor(){
         super()
+        this.uploadFile.bind(this),
         this.state = {
             name: '',
             description: '',
@@ -19,8 +20,7 @@ class NewAlbum extends Component {
         }
     }
 
-    uploadFiles(files){
-        const image = files[0]
+    uploadFile (file) {
 
         const cloudName = 'djswgrool'
         const url = 'https://api.cloudinary.com/v1_1/'+cloudName+'/image/upload'
@@ -39,28 +39,40 @@ class NewAlbum extends Component {
         }
 
         let uploadRequest = superagent.post(url)
-        uploadRequest.attach('file', image)
 
-        Object.keys(params).forEach((key) => {
-            uploadRequest.field(key, params[key])
-        })
 
-        uploadRequest.end((err, resp) => {
-            if (err){
-                alert(err, null)
-                return
-            }
+            uploadRequest.attach('file', file)
 
-            const uploaded = resp.body
-            const imageUrl = resp.body.secure_url
+            Object.keys(params).forEach((key) => {
+                uploadRequest.field(key, params[key])
+            })
+
+        uploadRequest.then((res) => {
+
+            console.log('UPLOAD COMPLETE: '+JSON.stringify(res.body))
+            const uploaded = res.body
+            const imageUrl = res.body.secure_url
             let updatedArr = this.state.images.slice();
             updatedArr.push(imageUrl);
-            this.setState({
-                images: updatedArr
+                this.setState({
+                    images: updatedArr
+                })
             })
+
+        .catch((error) => {
+            console.log(error)
+            return
         })
 
+
     }
+
+    uploadFiles(files){
+        for(let i=0; i<files.length; i++){
+        this.uploadFile(files[i])
+    }}
+
+
 
     postAlbum(event){
         event.preventDefault()
@@ -102,9 +114,8 @@ class NewAlbum extends Component {
                 <input onChange={this.updateAlbumDescription.bind(this)} type="text" id="description" placeholder="Description" /><br />
                     <Dropzone onDrop={this.uploadFiles.bind(this)}/>
                     {this.state.images.map(function(image, i){
-                        console.log(image)
                         return <div key={i}>
-                                <img src={image}/>
+                                <img src={image} style={{width: '300px'}}/>
                                 <div className="X"></div>
                              </div>
                     })}
