@@ -4,7 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
+var assert = require('assert')
 var sessions = require('client-sessions')
 require('dotenv').config()
 
@@ -12,7 +13,12 @@ var index = require('../routes/index');
 var api = require('../routes/api');
 var account = require('../routes/account');
 
-mongoose.connect(process.env.DB_URL, function(err, res){
+var app = express();
+
+
+// Use connect method to connect to the Server
+
+mongoose.connect('mongodb://localhost/socialight', function(err, res){
     if (err) {
         console.log('DB CONNECTION FAILED: '+err)
     }
@@ -21,7 +27,6 @@ mongoose.connect(process.env.DB_URL, function(err, res){
     }
 })
 
-var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, '../views'));

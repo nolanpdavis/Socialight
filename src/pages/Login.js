@@ -21,7 +21,7 @@ class Login extends Component {
         APIManager.post('/account/login', this.state.visitor, (err, response) => {
             if(err){
                 let msg = err.message || err
-                alert(msg)
+                console.log(msg)
                 return
             }
 

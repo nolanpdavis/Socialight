@@ -7,6 +7,7 @@ import { DropZone } from '../modules'
 import Dropzone from 'react-dropzone'
 import sha1 from 'sha1'
 import superagent from 'superagent'
+import { AccountNav, Header } from '../modules'
 
 class NewAlbum extends Component {
     constructor(){
@@ -61,19 +62,17 @@ class NewAlbum extends Component {
 
     }
 
-    postAlbum(event, visitor){
+    postAlbum(event){
         event.preventDefault()
 
         let updated = Object.assign({}, this.state)
-
-        APIManager.post('/api/album', updated, (err, response) => {
+        APIManager.put('/api/profile/'+this.props.currentUser.id, updated, (err, response) => {
             if (err){
                 let msg = err.message || err
                 alert(msg)
                 console.log(JSON.stringify(msg))
                 return
             }
-            console.log(JSON.stringify(updated))
             this.props.history.push('/')
     })
 }
@@ -91,13 +90,24 @@ class NewAlbum extends Component {
     }
 
     render(){
+
+
+
         return(
             <div>
+                <Header />
+                <AccountNav history={history}/>
                 <h1>Create New Album</h1>
                 <input onChange={this.updateAlbumName.bind(this)} type="text" id="name" placeholder="Album Name" /><br />
                 <input onChange={this.updateAlbumDescription.bind(this)} type="text" id="description" placeholder="Description" /><br />
                     <Dropzone onDrop={this.uploadFiles.bind(this)}/>
-                    {/*<img src={this.state.image.url} />*/}
+                    {this.state.images.map(function(image, i){
+                        console.log(image)
+                        return <div key={i}>
+                                <img src={image}/>
+                                <div className="X"></div>
+                             </div>
+                    })}
                 <button onClick={this.postAlbum.bind(this)}>Create Album</button>
             </div>
         )

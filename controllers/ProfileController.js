@@ -1,4 +1,5 @@
 var Profile = require('../models/Profile')
+var Album = require('../models/Album')
 var Promise = require('bluebird')
 var bcrypt = require('bcryptjs')
 
@@ -53,5 +54,23 @@ module.exports = {
                 resolve(profile.summary())
             })
         })
+    },
+
+    createAlbum: function(params, id){
+        return new Promise(function(resolve, reject){
+
+            Profile.findByIdAndUpdate(
+                {_id: id},
+                {$push: {albums: params} },
+                function(err, profile) {
+                    if (err){
+                        reject(err)
+                        return
+                    }
+
+                    resolve(profile.summary())
+                })
+            }
+        )
     }
 }

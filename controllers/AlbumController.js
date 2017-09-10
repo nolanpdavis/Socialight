@@ -1,51 +1,45 @@
-var Album = require('../models/Album')
 var Profile = require('../models/Profile')
 var Promise = require('bluebird')
-var bcrypt = require('bcryptjs')
+var mongoose = require('mongoose')
 
 module.exports = {
 
     find: function(params, isRaw){
         return new Promise(function(resolve, reject){
-            Album.find(params, function(err, albums){
+
+
+            Profile.aggregate( [
+                {$project: {"albums": 1}},
+                {$unwind:"$albums"}
+            ], function(err, albums){
                 if (err){
                     reject(err)
                     return
                 }
-
-                var summaries = []
-                albums.forEach(function(album){
-                    summaries.push(album.summary())
-                })
-                resolve(summaries)
+                resolve(albums)
             })
+
         })
     },
 
     findById: function(id){
         return new Promise(function(resolve, reject){
-            Album.findById(id, function(err, album){
+
+            let idToSearch = mongoose.Types.ObjectId(id)
+
+            Profile.aggregate( [
+                {$project: {"albums": 1, _id: 0}},
+                {$unwind:"$albums"},
+                {$match: {"albums._id": idToSearch}}
+            ], function(err, albums){
                 if (err){
                     reject(err)
                     return
                 }
 
-                resolve(album.summary())
+                resolve(albums)
             })
-        })
-    },
-    create: function(params){
-        return new Promise(function(resolve, reject){
 
-            // const profile = Profile.findById(id)
-            Album.create(params, function(err, album){
-                if (err){
-                    reject(err)
-                    return
-                }
-
-                resolve(album.summary())
-            }).populate('user')
         })
     }
-}
+};

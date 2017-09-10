@@ -12,6 +12,8 @@ class AccountNav extends Component {
         APIManager.get('/account/currentuser', null, (err, response) => {
             if (err) {
                 alert(err)
+                console.log(err)
+                console.log(JSON.stringify(err))
                 return
             }
 
@@ -28,6 +30,8 @@ class AccountNav extends Component {
             if (err){
                 let msg = err.message || err
                 alert(msg)
+                console.log(msg)
+                console.log(JSON.stringify(msg))
                 return
             }
             this.props.currentUserReceived(null)
@@ -47,6 +51,8 @@ class AccountNav extends Component {
                         </div>
                         :
                         <div>
+                            <Link to='/'>Home</Link>
+                            <br />
                             <Link to='/albums'>Albums</Link>
                             <br />
                             <Link to='/' onClick={this.onLogout.bind(this)}>Log out</Link>
