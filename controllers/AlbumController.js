@@ -36,7 +36,7 @@ module.exports = {
                     reject(err)
                     return
                 }
-
+                
                 resolve(albums)
             })
 

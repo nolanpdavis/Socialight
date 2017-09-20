@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import store from './stores'
 import { Provider } from 'react-redux'
-import { Account, Albums, Images, Profile, Signup, Login, NewAlbum } from './pages'
+import { Account, Albums, Images, Profile, Signup, Login, NewAlbum, Album } from './pages'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
+require('../styles/main.css')
 
 class App extends Component {
     render(){
@@ -18,6 +19,7 @@ class App extends Component {
                         <Route path="/signup" component={Signup} />
                         <Route path="/login" component={Login} />
                         <Route path="/newalbum" component={NewAlbum} />
+                        <Route path="/album/:id" component={Album} />
                     </Switch>
                 </BrowserRouter>
             </Provider>

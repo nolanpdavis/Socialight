@@ -8,7 +8,6 @@ export default class Images extends Component {
         return(
             <div>
                 <Header />
-                <AccountNav history={history}/>
                 <ImageBoard />
             </div>
         )

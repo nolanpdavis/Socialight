@@ -8,6 +8,7 @@ import Dropzone from 'react-dropzone'
 import sha1 from 'sha1'
 import superagent from 'superagent'
 import { AccountNav, Header } from '../modules'
+import geolib from 'geolib'
 
 class NewAlbum extends Component {
     constructor(){
@@ -16,7 +17,8 @@ class NewAlbum extends Component {
         this.state = {
             name: '',
             description: '',
-            images: []
+            images:
+                []
         }
     }
 
@@ -26,7 +28,7 @@ class NewAlbum extends Component {
         const url = 'https://api.cloudinary.com/v1_1/'+cloudName+'/image/upload'
 
         const timestamp = Date.now()/1000
-        const uploadPreset = 'hogwyejn'
+        const uploadPreset = 'gxgjmexn'
 
         const paramStr = 'timestamp='+timestamp+'&upload_preset='+uploadPreset+'HiP4dbpagTMuPWo6dA93J-ROAyQ'
 
@@ -35,7 +37,7 @@ class NewAlbum extends Component {
             'api_key': '485348192797243',
             'timestamp': timestamp,
             'upload_preset': uploadPreset,
-            'signature': signature
+            'signature': signature,
         }
 
         let uploadRequest = superagent.post(url)
@@ -49,11 +51,26 @@ class NewAlbum extends Component {
 
         uploadRequest.then((res) => {
 
-            console.log('UPLOAD COMPLETE: '+JSON.stringify(res.body))
             const uploaded = res.body
-            const imageUrl = res.body.secure_url
+            console.log(uploaded)
+
+            if (res.body.image_metadata.GPSLatitude) {
+                let latitude = geolib.useDecimal(res.body.image_metadata.GPSLatitude.slice(0, 2) +'°'+res.body.image_metadata.GPSLatitude.slice(7, res.body.image_metadata.GPSLatitude.length))
+            }
+            let latitude = 34.0522
+
+            if (res.body.image_metadata.GPSLongitude) {
+                let longitude = geolib.useDecimal(res.body.image_metadata.GPSLongitude.slice(0, 2) +'°'+res.body.image_metadata.GPSLongitude.slice(7, res.body.image_metadata.GPSLongitude.length))
+            }
+            let longitude = 118.2437
+
+            const url = res.body.secure_url
             let updatedArr = this.state.images.slice();
-            updatedArr.push(imageUrl);
+            let location = []
+            location.push(longitude, latitude)
+
+            const imageObj = {url, location}
+            updatedArr.push(imageObj)
                 this.setState({
                     images: updatedArr
                 })
@@ -83,9 +100,10 @@ class NewAlbum extends Component {
                 let msg = err.message || err
                 alert(msg)
                 console.log(JSON.stringify(msg))
+                console.log('updated', updated)
                 return
             }
-            this.props.history.push('/')
+            this.props.history.push('/albums')
     })
 }
 
@@ -108,17 +126,16 @@ class NewAlbum extends Component {
         return(
             <div>
                 <Header />
-                <AccountNav history={history}/>
                 <h1>Create New Album</h1>
                 <input onChange={this.updateAlbumName.bind(this)} type="text" id="name" placeholder="Album Name" /><br />
                 <input onChange={this.updateAlbumDescription.bind(this)} type="text" id="description" placeholder="Description" /><br />
                     <Dropzone onDrop={this.uploadFiles.bind(this)}/>
                     {this.state.images.map(function(image, i){
                         return <div key={i}>
-                                <img src={image} style={{width: '300px'}}/>
+                                <img src={image.url} style={{width: '300px'}}/>
                                 <div className="X"></div>
                              </div>
-                    })}
+                    }.bind(this))}
                 <button onClick={this.postAlbum.bind(this)}>Create Album</button>
             </div>
         )

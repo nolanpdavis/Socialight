@@ -46,15 +46,12 @@ class AccountNav extends Component {
                     (this.props.currentUser == null) ?
                         <div>
                             <Link to='/login'>Log In</Link>
-                            <br />
                             <Link to='/signup'>Sign Up</Link>
                         </div>
                         :
                         <div>
                             <Link to='/'>Home</Link>
-                            <br />
                             <Link to='/albums'>Albums</Link>
-                            <br />
                             <Link to='/' onClick={this.onLogout.bind(this)}>Log out</Link>
                         </div>
 

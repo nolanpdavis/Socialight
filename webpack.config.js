@@ -1,6 +1,7 @@
 var webpack = require('webpack')
 var path = require('path')
 
+
 module.exports = {
     entry: path.resolve('./src/app.js'),
     output: {
@@ -17,7 +18,15 @@ module.exports = {
                 query: {
                     presets: ['react', 'es2015']
                 }
-            }
+            },
+            {
+				test: /\.(jpg|png|svg|jpeg)$/,
+				loader: 'url-loader'
+			},
+            {
+                test: /\.(scss|css)$/,
+                loader: 'style-loader!css-loader'
+            },
         ]
     }
 }

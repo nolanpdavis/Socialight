@@ -5,6 +5,7 @@ import Signup from './Signup'
 import Login from './Login'
 import Albums from './Albums'
 import NewAlbum from './NewAlbum'
+import Album from './Album'
 
 export {
     Account,
@@ -13,5 +14,6 @@ export {
     Signup,
     Login,
     Albums,
-    NewAlbum
+    NewAlbum,
+    Album
 }

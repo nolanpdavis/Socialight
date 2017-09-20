@@ -1,10 +1,17 @@
 var mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
+var ImageSchema = new mongoose.Schema({
+    url: {type:String},
+    location: {
+        type:[Number],
+        index: '2d'}
+})
+
 var AlbumSchema = new mongoose.Schema({
-    name: {type:String, trim:true, lowercase: true, default:''},
-    description: {type:String, trim:true, lowercase: true, default:''},
-    images: [String],
+    name: {type:String, trim:true, default:''},
+    description: {type:String, trim:true, default:''},
+    images: [ImageSchema],
     timestamp: {type:Date, default:Date.now}
 })
 
