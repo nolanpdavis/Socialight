@@ -2,27 +2,78 @@ import React, { Component } from 'react'
 import { Header, ImageBoard, AccountNav, AlbumBoard } from '../modules'
 import {Router, Route, Redirect, Link, withRouter } from 'react-router-dom'
 import { APIManager } from '../utils'
+import ReactDOM from 'react-dom'
 import {Image, CloudinaryContext, Transformation} from 'cloudinary-react';
+import { compose, withProps, lifecycle } from "recompose";
+const Waypoint = require('react-waypoint');
+import {
+  withScriptjs,
+  withGoogleMap,
+  GoogleMap,
+  Marker
+} from "react-google-maps";
 
 
 export default class Album extends Component {
     constructor(){
         super()
+        this.toLatLng.bind(this),
+        this.loadMore = this.loadMore.bind(this),
+        this.handleScroll = this.handleScroll.bind(this),
         this.state = {
-            images: []
+            images: [],
+            center: { lat: 25.03, lng: 121.6 },
+            limit: 6
         }
     }
 
+    toLatLng (coord) {
+        if (coord == undefined) {
+            return
+        }
+        const latLng = {lat: coord[1], lng: coord[0]}
+        return latLng
+    }
+
     componentWillMount(){
-        APIManager.get(`/api/album/${this.props.match.params.id}`, null, (err, response) => {
+        APIManager.get(`/api/album/${this.props.match.params.id}`, {limit: this.state.limit}, (err, response) => {
             if(err){
                 let msg = err.message || err
                 console.log(msg)
                 return
             }
 
-            let images = response.result[0].albums.images
-            console.log(images)
+            let images = response.result
+
+
+            this.setState({
+                images: images,
+                center: this.toLatLng(images[0].albums.images.location)
+            })
+
+        })
+    }
+
+
+    handleScroll(location){
+        this.setState({
+            center: this.toLatLng(location)
+        })
+    }
+
+    loadMore(){
+        this.setState({
+            limit: this.state.limit+=3
+        })
+        console.log(this.state.limit)
+        APIManager.get(`/api/album/${this.props.match.params.id}`, {limit: this.state.limit}, (err, response) => {
+            if(err){
+                let msg = err.message || err
+                console.log(msg)
+                return
+            }
+
+            let images = response.result
 
             this.setState({
                 images: images
@@ -30,40 +81,74 @@ export default class Album extends Component {
         })
     }
 
+
     render(){
 
-        const clImages = this.state.images.slice()
-        const displayImages = []
-        for(let i=0; i<clImages.length; i++) {
-            displayImages.push(clImages[i].slice(62, clImages[i].length))
+        const Map = compose(
+              withProps({
+                googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyAsv9Hz2-CqDOgrb4FBSkfC-4aTiJL13cI",
+                loadingElement: <div style={{ height: `100%` }} />,
+                containerElement: <div style={{ height: `calc(100vh - 100px)`, position: 'fixed', left: '60vw' }} />,
+                mapElement: <div style={{ width: `40vw`, height: `100%`}} />,
+                center: this.state.center,
+              }),
+              withScriptjs,
+              withGoogleMap,
+            )(props =>
+              <GoogleMap
+                defaultZoom={14}
+                defaultCenter={props.center}
+              >
+              {this.state.images.map((image, i) => {
+                  return (
+                      <Marker key={i}
+                          position={this.toLatLng(image.albums.images.location)}
+                      />
+                  )
+              })}
+              </GoogleMap>
+            );
+
+
+        const toPublicId = (image) => {
+            return image.slice(62, image.length)
         }
+
 
         return(
             <div>
                 <Header />
-                <div className="imageBoard">
-                                <CloudinaryContext  cloudName="djswgrool" fetchFormat="auto" >
-                                  <div className="image-holder">
-                                      {displayImages.map((displayImage, i) => {
-                                          return (
-                                              <div className="responsive" key={i}>
-                                                  <div className="img">
-                                                      <a target="_blank" href={`http://res.cloudinary.com/djswgrool/image/upload/${displayImage}.jpg`}>
-                                                          <Image publicId={displayImage} responsive style={{width: '100%'}}>
-                                                              <Transformation
-                                                                  crop="scale"
-                                                                  width="auto"
-                                                                  responsive_placeholder="blank"
-                                                              />
-                                                          </Image>
-                                                      </a>
-                                                  </div>
-                                              </div>
-                                          )
-                                      })
-                                  }
+                <Map />
+                <div className="albumImageBoard">
+                    <CloudinaryContext  cloudName="djswgrool" fetchFormat="auto" >
+                      <div className="image-holder" ref="imgDiv">
+
+                          {this.state.images.map((image, i) => {
+                              return (
+                                  <div className="responsive" key={i}>
+                                      <div className="img">
+                                          <a target="_blank" href={`http://res.cloudinary.com/djswgrool/image/upload/${toPublicId(image.albums.images.url)}`}>
+                                              <Image publicId={toPublicId(image.albums.images.url)} responsive style={{width: '100%'}} >
+                                                  <Transformation
+                                                      crop="scale"
+                                                      width="auto"
+                                                      responsive_placeholder="blank"
+                                                  />
+                                              </Image>
+                                          </a>
+                                      </div>
+                                     <Waypoint
+                                        onEnter={ () => this.handleScroll(image.albums.images.location)}/>
                                   </div>
-                                </CloudinaryContext>
+
+                              )
+                          })
+                      }
+                      </div>
+                      <Waypoint
+                        onEnter={ () => this.loadMore()}
+                        bottomOffset='-500px'/>
+                    </CloudinaryContext>
                 </div>
             </div>
         )

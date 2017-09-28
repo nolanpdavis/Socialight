@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { APIManager } from '../utils'
 import {Router, Route, Redirect, Link, withRouter } from 'react-router-dom'
 import {Image, CloudinaryContext, Transformation} from 'cloudinary-react';
+import Bitly from 'bitly';
 
 
 
@@ -15,6 +16,20 @@ class AlbumBoard extends Component {
         }
     }
 
+    // bitLink(url) {
+    //
+    //     return function(e){
+    //         let bitly = new Bitly('f06707da4944c63f50d83735fa83bba16bcbdc41');
+    //
+    //         bitly.shorten(url)
+    //           .then(function(response) {
+    //             let short_url = response.data.url
+    //             console.log(short_url)
+    //           }, function(error) {
+    //             throw error;
+    //           });
+    //     }
+    // }
 
 
     render(){
@@ -43,19 +58,19 @@ class AlbumBoard extends Component {
                                             </Image>
                                             :
                                             <div>
-                                                <Image publicId={toPublicId(album.images[0])} responsive className="album1">
+                                                <Image publicId={toPublicId(album.images[0].url)} responsive className="album1">
                                                     <Transformation
                                                         width="200"
                                                         height="200"
                                                         crop="fill" />
                                                 </Image>
-                                                <Image publicId={toPublicId(album.images[1])} responsive className="album2">
+                                                <Image publicId={toPublicId(album.images[1].url)} responsive className="album2">
                                                     <Transformation
                                                         width="200"
                                                         height="200"
                                                         crop="fill" />
                                                 </Image>
-                                                <Image publicId={toPublicId(album.images[2])} responsive className="album3">
+                                                <Image publicId={toPublicId(album.images[2].url)} responsive className="album3">
                                                     <Transformation
                                                         width="200"
                                                         height="200"

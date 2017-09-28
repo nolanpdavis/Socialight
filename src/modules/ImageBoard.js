@@ -1,17 +1,41 @@
 import React, { Component } from 'react'
 import { APIManager } from '../utils'
 import {Image, CloudinaryContext, Transformation} from 'cloudinary-react';
+const Waypoint = require('react-waypoint');
 
 export default class ImageBoard extends Component {
     constructor(){
         super()
+        this.loadMore = this.loadMore.bind(this),
         this.state = {
-            images: []
+            images: [],
+            limit: 12
         }
     }
 
     componentWillMount(){
-        APIManager.get('/api/image', null, (err, response) => {
+        APIManager.get('/api/image', {limit: this.state.limit}, (err, response) => {
+            if(err){
+                let msg = err.message || err
+                console.log(msg)
+                return
+            }
+
+            let array = response.results
+
+            this.setState({
+                images: array
+            })
+        })
+    }
+
+
+    loadMore(){
+        this.setState({
+            limit: this.state.limit+=12
+        })
+        console.log(this.state.limit)
+        APIManager.get('/api/image', {limit: this.state.limit}, (err, response) => {
             if(err){
                 let msg = err.message || err
                 console.log(msg)
@@ -28,12 +52,6 @@ export default class ImageBoard extends Component {
 
     render(){
 
-        const clImages = this.state.images.slice()
-        const displayImages = []
-        for(let i=0; i<clImages.length; i++) {
-            displayImages.push(clImages[i].albums.images.slice(62, clImages[i].albums.images.length))
-        }
-
         const toPublicId = (image) => {
             return image.slice(62, image.length)
         }
@@ -45,8 +63,8 @@ export default class ImageBoard extends Component {
                           return (
                               <div className="responsive imgContainer" key={i} style={{}}>
                                   <div className="img" style={{height: '10px'}}>
-                                      <a href={image.albums.images} className="imgLink">
-                                          <Image publicId={toPublicId(image.albums.images)} responsive className="imageBoardImage">
+                                      <a href={`/album/${image.albums._id}`} className="imgLink">
+                                          <Image publicId={toPublicId(image.albums.images.url)} responsive className="imageBoardImage">
                                               <Transformation
                                               width="500"
                                               height="500"
@@ -59,13 +77,11 @@ export default class ImageBoard extends Component {
                           )
                       })
                   }
+                  <Waypoint
+                    onEnter={ () => this.loadMore()}
+                    bottomOffset='-400px'/>
                 </CloudinaryContext>
             </div>
         )
     }
 }
-
-
-{
-
-                       }

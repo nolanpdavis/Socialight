@@ -22,23 +22,41 @@ module.exports = {
         })
     },
 
-    findById: function(id){
+    findById: function(params, id){
         return new Promise(function(resolve, reject){
 
             let idToSearch = mongoose.Types.ObjectId(id)
 
-            Profile.aggregate( [
-                {$project: {"albums": 1, _id: 0}},
-                {$unwind:"$albums"},
-                {$match: {"albums._id": idToSearch}}
-            ], function(err, albums){
-                if (err){
-                    reject(err)
-                    return
-                }
-                
-                resolve(albums)
-            })
+            if (params.limit == undefined) {
+                Profile.aggregate( [
+                    {$project: {"albums": 1, _id: 0}},
+                    {$unwind:"$albums"},
+                    {$match: {"albums._id": idToSearch}},
+                    {$unwind:"$albums.images"},
+                ], function(err, albums){
+                    if (err){
+                        reject(err)
+                        return
+                    }
+                    resolve(albums)
+                })
+            }
+            else {
+                Profile.aggregate( [
+                    {$project: {"albums": 1, _id: 0}},
+                    {$unwind:"$albums"},
+                    {$match: {"albums._id": idToSearch}},
+                    {$unwind:"$albums.images"},
+                    {$limit: parseInt(params.limit)}
+                ], function(err, albums){
+                    if (err){
+                        reject(err)
+                        return
+                    }
+                    resolve(albums)
+                })
+            }
+
 
         })
     }

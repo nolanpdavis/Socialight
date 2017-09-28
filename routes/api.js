@@ -44,7 +44,8 @@ router.get('/:resource/:id', function(req, res, next){
     }
 
     var id = req.params.id
-    controller.findById(id)
+    var params = req.query
+    controller.findById(params, id)
     .then(function(result){
         res.json({
             confirmation: 'success',

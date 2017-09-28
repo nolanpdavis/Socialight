@@ -54,20 +54,42 @@ class NewAlbum extends Component {
             const uploaded = res.body
             console.log(uploaded)
 
-            if (res.body.image_metadata.GPSLatitude) {
-                let latitude = geolib.useDecimal(res.body.image_metadata.GPSLatitude.slice(0, 2) +'°'+res.body.image_metadata.GPSLatitude.slice(7, res.body.image_metadata.GPSLatitude.length))
-            }
-            let latitude = 34.0522
+            let location = []
 
-            if (res.body.image_metadata.GPSLongitude) {
-                let longitude = geolib.useDecimal(res.body.image_metadata.GPSLongitude.slice(0, 2) +'°'+res.body.image_metadata.GPSLongitude.slice(7, res.body.image_metadata.GPSLongitude.length))
+            if (res.body.image_metadata.GPSLongitude == undefined) {
+                const preLongitude = "-77.32960556"
+                const longitude = JSON.parse(preLongitude)
+                console.log('defaultLongitude:' +longitude)
+                location.push(longitude)
             }
-            let longitude = 118.2437
+
+            else {
+                let preLng = JSON.stringify(res.body.image_metadata.GPSLongitude).replace(/ deg/g, '°')
+                console.log('preLng', preLng)
+                let postLng = JSON.parse(preLng)
+                const longitude = geolib.useDecimal(postLng)
+                location.push(longitude)
+            }
+
+            if (res.body.image_metadata.GPSLatitude == undefined) {
+                const preLatitude = "38.97130278"
+                const latitude = JSON.parse(preLatitude)
+                console.log('defaultLatitude:' +latitude)
+                location.push(latitude)
+            }
+            else {
+                let preLat = JSON.stringify(res.body.image_metadata.GPSLatitude).replace(/ deg/g, '°')
+                console.log('preLat', preLat)
+                let postLat = JSON.parse(preLat)
+                const latitude = geolib.useDecimal(postLat)
+                location.push(latitude)
+            }
+
 
             const url = res.body.secure_url
             let updatedArr = this.state.images.slice();
-            let location = []
-            location.push(longitude, latitude)
+
+            console.log(location)
 
             const imageObj = {url, location}
             updatedArr.push(imageObj)

@@ -69,7 +69,6 @@ module.exports = {
                     }
 
                     resolve(profile.summary())
-                    console.log('params', params)
                 })
             }
         )
