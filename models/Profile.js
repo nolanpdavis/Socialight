@@ -12,7 +12,7 @@ var AlbumSchema = new mongoose.Schema({
     name: {type:String, trim:true, default:''},
     description: {type:String, trim:true, default:''},
     images: [ImageSchema],
-    timestamp: {type:Date, default:Date.now}
+    albumTimestamp: {type:Date, default:Date.now}
 })
 
 var ProfileSchema = new Schema({

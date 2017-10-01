@@ -4,9 +4,6 @@ import { connect } from 'react-redux'
 import { APIManager } from '../utils'
 import {Router, Route, Redirect, Link, withRouter } from 'react-router-dom'
 import {Image, CloudinaryContext, Transformation} from 'cloudinary-react';
-import Bitly from 'bitly';
-
-
 
 class AlbumBoard extends Component {
     constructor(){
@@ -16,25 +13,13 @@ class AlbumBoard extends Component {
         }
     }
 
-    // bitLink(url) {
-    //
-    //     return function(e){
-    //         let bitly = new Bitly('f06707da4944c63f50d83735fa83bba16bcbdc41');
-    //
-    //         bitly.shorten(url)
-    //           .then(function(response) {
-    //             let short_url = response.data.url
-    //             console.log(short_url)
-    //           }, function(error) {
-    //             throw error;
-    //           });
-    //     }
-    // }
-
 
     render(){
 
         const toPublicId = (image) => {
+            if (image == undefined) {
+                return
+            }
             return image.slice(62, image.length)
         }
 
@@ -44,9 +29,7 @@ class AlbumBoard extends Component {
             {(this.props.currentUser) ?
                 this.props.currentUser.albums.map(function(album, i){
                     return <div key={i} className="thumbnailContainer">
-                                <h2>{album.name}</h2>
-                                <Link to={`/album/${album._id}`}>{album._id}</Link>
-                                <p>{album.description}</p>
+                                <h3 className="albumsName">{album.name}</h3>
                                 <div className="albumThumbnailContainer">
                                 <CloudinaryContext cloudName="djswgrool" fetchFormat="auto">
                                         { (album.images.length < 3) ?
@@ -82,6 +65,7 @@ class AlbumBoard extends Component {
                                     </CloudinaryContext>
                                 </div>
                                 <div className="X"></div>
+                                <Link to={`/album/${album._id}`} className="albumsLink">View Album</Link>
                             </div>
                 })
             :

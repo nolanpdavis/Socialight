@@ -9,6 +9,7 @@ import sha1 from 'sha1'
 import superagent from 'superagent'
 import { AccountNav, Header } from '../modules'
 import geolib from 'geolib'
+import {Image, CloudinaryContext, Transformation} from 'cloudinary-react';
 
 class NewAlbum extends Component {
     constructor(){
@@ -16,7 +17,6 @@ class NewAlbum extends Component {
         this.uploadFile.bind(this),
         this.state = {
             name: '',
-            description: '',
             images:
                 []
         }
@@ -52,20 +52,17 @@ class NewAlbum extends Component {
         uploadRequest.then((res) => {
 
             const uploaded = res.body
-            console.log(uploaded)
 
             let location = []
 
             if (res.body.image_metadata.GPSLongitude == undefined) {
                 const preLongitude = "-77.32960556"
                 const longitude = JSON.parse(preLongitude)
-                console.log('defaultLongitude:' +longitude)
                 location.push(longitude)
             }
 
             else {
                 let preLng = JSON.stringify(res.body.image_metadata.GPSLongitude).replace(/ deg/g, '°')
-                console.log('preLng', preLng)
                 let postLng = JSON.parse(preLng)
                 const longitude = geolib.useDecimal(postLng)
                 location.push(longitude)
@@ -74,12 +71,10 @@ class NewAlbum extends Component {
             if (res.body.image_metadata.GPSLatitude == undefined) {
                 const preLatitude = "38.97130278"
                 const latitude = JSON.parse(preLatitude)
-                console.log('defaultLatitude:' +latitude)
                 location.push(latitude)
             }
             else {
                 let preLat = JSON.stringify(res.body.image_metadata.GPSLatitude).replace(/ deg/g, '°')
-                console.log('preLat', preLat)
                 let postLat = JSON.parse(preLat)
                 const latitude = geolib.useDecimal(postLat)
                 location.push(latitude)
@@ -88,8 +83,6 @@ class NewAlbum extends Component {
 
             const url = res.body.secure_url
             let updatedArr = this.state.images.slice();
-
-            console.log(location)
 
             const imageObj = {url, location}
             updatedArr.push(imageObj)
@@ -116,18 +109,27 @@ class NewAlbum extends Component {
     postAlbum(event){
         event.preventDefault()
 
+        if (this.state.name.length < 1) {
+            alert('Album must have a name')
+            return
+        }
+
+        else if (this.state.images.length < 1) {
+            alert('Album must contain at least one image')
+            return
+        }
+
         let updated = Object.assign({}, this.state)
         APIManager.put('/api/profile/'+this.props.currentUser.id, updated, (err, response) => {
             if (err){
                 let msg = err.message || err
                 alert(msg)
                 console.log(JSON.stringify(msg))
-                console.log('updated', updated)
                 return
             }
             this.props.history.push('/albums')
-    })
-}
+        })
+    }
 
     updateAlbumName(event){
         this.setState({
@@ -135,30 +137,40 @@ class NewAlbum extends Component {
         })
     }
 
-    updateAlbumDescription(event){
-        this.setState({
-            description: event.target.value
-        })
-    }
-
     render(){
 
-
+        const toPublicId = (image) => {
+            if (image == undefined) {
+                return
+            }
+            return image.slice(62, image.length)
+        }
 
         return(
             <div>
                 <Header />
-                <h1>Create New Album</h1>
-                <input onChange={this.updateAlbumName.bind(this)} type="text" id="name" placeholder="Album Name" /><br />
-                <input onChange={this.updateAlbumDescription.bind(this)} type="text" id="description" placeholder="Description" /><br />
-                    <Dropzone onDrop={this.uploadFiles.bind(this)}/>
-                    {this.state.images.map(function(image, i){
-                        return <div key={i}>
-                                <img src={image.url} style={{width: '300px'}}/>
-                                <div className="X"></div>
-                             </div>
-                    }.bind(this))}
-                <button onClick={this.postAlbum.bind(this)}>Create Album</button>
+                <h2>Create New Album</h2>
+                <input className="inputBox" onChange={this.updateAlbumName.bind(this)} type="text" id="name" placeholder="Album Name" />
+                    <Dropzone  className="dropZone" onDrop={this.uploadFiles.bind(this)}/>
+                    <CloudinaryContext  cloudName="djswgrool" fetchFormat="auto" >
+                          {this.state.images.map((image, i) => {
+                              return (
+                                  <div className="responsive newAlbumImage" key={i} style={{}}>
+                                      <div>
+                                          <Image publicId={toPublicId(image.url)} responsive>
+                                              <Transformation
+                                              width="500"
+                                              height="500"
+                                              crop="fill"
+                                              />
+                                          </Image>
+                                      </div>
+                                  </div>
+                              )
+                          })
+                      }
+                    </CloudinaryContext>
+                <button className="btn"onClick={this.postAlbum.bind(this)}>Create Album</button>
             </div>
         )
     }

@@ -9,8 +9,10 @@ export default class Albums extends Component {
         return(
             <div>
                 <Header />
-                <Link to='/newalbum' className="newAlbumLink">Create New Album</Link>
-                <AlbumBoard/>
+                <div className="albumPage">
+                    <Link to='/newalbum' className="newAlbumLink">Create New Album</Link>
+                    <AlbumBoard/>
+                </div>
             </div>
         )
     }

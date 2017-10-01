@@ -9,9 +9,10 @@ module.exports = {
 
             if (params.limit == undefined ) {
                 Profile.aggregate( [
-                    {$project: {"albums.images": 1, "albums._id": 1, "albums.timestamp": 1}},
+                    {$project: {"albums.images": 1, "albums._id": 1, "albums.albumTimestamp": 1}},
                     {$unwind:"$albums"},
-                    {$unwind:"$albums.images"}
+                    {$unwind:"$albums.images"},
+                    {$sort: {'albums.albumTimestamp': -1}},
                 ], function(err, images){
                     if (err){
                         console.log(err)
@@ -23,9 +24,10 @@ module.exports = {
             }
             else {
                 Profile.aggregate( [
-                    {$project: {"albums.images": 1, "albums._id": 1, "albums.timestamp": 1}},
+                    {$project: {"albums.images": 1, "albums._id": 1, "albums.albumTimestamp": 1}},
                     {$unwind:"$albums"},
                     {$unwind:"$albums.images"},
+                    {$sort: {'albums.albumTimestamp': -1}},
                     {$limit: parseInt(params.limit)}
                 ], function(err, images){
                     if (err){

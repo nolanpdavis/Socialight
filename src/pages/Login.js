@@ -41,10 +41,10 @@ class Login extends Component {
     render(){
         return(
             <div>
-                <h1>Log In</h1>
-                <input onChange={this.updateVisitor.bind(this)} type="text" id="userName" placeholder="Username" /><br />
-                <input onChange={this.updateVisitor.bind(this)} type="text" id="password" placeholder="Password" /><br />
-                <button onClick={this.login.bind(this)}>Log in</button>
+                <h2>Log In</h2>
+                <input className="inputBox" onChange={this.updateVisitor.bind(this)} type="text" id="userName" placeholder="Username" /><br />
+                <input className="inputBox" onChange={this.updateVisitor.bind(this)} type="text" id="password" placeholder="Password" /><br />
+                <button className="btn" onClick={this.login.bind(this)}>Log in</button>
             </div>
         )
     }

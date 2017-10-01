@@ -3,6 +3,11 @@ import actions from '../actions'
 import { connect } from 'react-redux'
 import { APIManager } from '../utils'
 import {Router, Route, Redirect, Link, withRouter } from 'react-router-dom'
+const ImagesIcon = require('../../styles/img/ImagesIconColor.svg')
+const AlbumsIcon = require('../../styles/img/AlbumsIconColor.svg')
+const LogOutIcon = require('../../styles/img/LogOutIconColor.svg')
+const SignUpIcon = require('../../styles/img/SignUpIconColor.svg')
+const LogInIcon = require('../../styles/img/LogInIconColor.svg')
 
 
 class AccountNav extends Component {
@@ -40,14 +45,14 @@ class AccountNav extends Component {
     }
 
     render(){
+
         return(
             <div className="headerDiv">
-                <div className="headerText">
-                    <h1>Socialight</h1>
-                </div>
+                <h1>Socialight</h1>
                 {
                     (this.props.currentUser == null) ?
                         <div className="navbar">
+                            <Link to='/'>Images</Link>
                             <Link to='/login'>Log In</Link>
                             <Link to='/signup'>Sign Up</Link>
                         </div>
@@ -55,9 +60,8 @@ class AccountNav extends Component {
                         <div className="navbar">
                             <Link to='/'>Images</Link>
                             <Link to='/albums'>Albums</Link>
-                            <Link to='/' onClick={this.onLogout.bind(this)}>Log out</Link>
+                            <Link to='/' onClick={this.onLogout.bind(this)}>Log Out</Link>
                         </div>
-
                 }
             </div>
         )

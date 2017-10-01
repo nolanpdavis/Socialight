@@ -19,11 +19,14 @@ export default class Album extends Component {
         super()
         this.toLatLng.bind(this),
         this.loadMore = this.loadMore.bind(this),
+        this.toRelative = this.toRelative.bind(this),
+        this.toFixed = this.toFixed.bind(this),
         this.handleScroll = this.handleScroll.bind(this),
         this.state = {
             images: [],
             center: { lat: 25.03, lng: 121.6 },
-            limit: 6
+            limit: 6,
+            fixed: false
         }
     }
 
@@ -65,7 +68,6 @@ export default class Album extends Component {
         this.setState({
             limit: this.state.limit+=3
         })
-        console.log(this.state.limit)
         APIManager.get(`/api/album/${this.props.match.params.id}`, {limit: this.state.limit}, (err, response) => {
             if(err){
                 let msg = err.message || err
@@ -81,6 +83,18 @@ export default class Album extends Component {
         })
     }
 
+    toRelative(){
+        this.setState({
+            fixed: false
+        })
+    }
+
+    toFixed(){
+        this.setState({
+            fixed: true
+        })
+    }
+
 
     render(){
 
@@ -88,8 +102,8 @@ export default class Album extends Component {
               withProps({
                 googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyAsv9Hz2-CqDOgrb4FBSkfC-4aTiJL13cI",
                 loadingElement: <div style={{ height: `100%` }} />,
-                containerElement: <div style={{ height: `calc(100vh - 100px)`, position: 'fixed', left: '60vw' }} />,
-                mapElement: <div style={{ width: `40vw`, height: `100%`}} />,
+                containerElement: <div className="mapStyle" className={(this.state.fixed) ? "mapFixed" : "mapRelative"} style={{height: `100vh`, float: `right`}} />,
+                mapElement: <div className="mapStyleWidth" style={{ width: `40vw`, height: `100%`}} />,
                 center: this.state.center,
               }),
               withScriptjs,
@@ -118,6 +132,9 @@ export default class Album extends Component {
         return(
             <div>
                 <Header />
+                <Waypoint
+                    onEnter={ () => this.toRelative() }
+                    onLeave={ () => this.toFixed() }/>
                 <Map />
                 <div className="albumImageBoard">
                     <CloudinaryContext  cloudName="djswgrool" fetchFormat="auto" >

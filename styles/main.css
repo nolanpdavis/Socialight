@@ -5,63 +5,48 @@
     -webkit-margin-after: 0;
 }
 
-.headerDiv {
-    height: 100px;
+body {
+    background-color: rgba(0, 0, 0, .0);
 }
 
-.headerText {
-    width: 33.33333%;
-    height: 95px;
-    align-items: center;
-    justify-content: center;
-    display: inline-flex;
-    flex-basis: 33.33%;
-    margin-top: -5px
-}
-
-.headerDiv h1 {
-    color: rgba(0, 0, 0, .7);
-    font-size: 34px;
-    font-family: 'Playfair Display', serif;
-    letter-spacing: 2px;
+h1 {
+    padding: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+    border-top: 5px solid #0070c9;
 }
 
 .navbar {
-    margin-left: 16.66%;
-    width: 50%;
+    top: 75vh;
+    width: 100vw;
     display: inline-flex;
     justify-content: space-around;
     align-items: center;
-    height: 95px;
 }
 
 .navbar a {
-    display: inline-block;
-    font-family: 'Roboto', sans-serif;
-    z-index: 5;
-    font-size: 24px;
-    color: rgba(0, 0, 0, .5);
+    font-size: 20px;
     text-decoration: none;
-    text-align: center;
+    color: #1D2027;
+    letter-spacing: 1px;
+    padding: 40px 0;
 }
 
 .imageBoard {
-    width: 100vw;
-    margin-top: 5px;
+    width: 99.5vw;
+    margin-left: .25vw;
+    margin-right: .25vw;
 }
 
 .imgContainer {
-    width: 33.333%;
+    width: 32.666vw;
+    margin-left: .25vw;
+    margin-right: .25vw;
     display: inline-block;
-    margin-top: -5px;
-}
-
-.imgLink{
-    height: 10px;
 }
 
 .imageBoardImage{
     width: 100%;
+    margin-bottom: calc(.5vw - 5px);
 }
 
 .thumbnail {
@@ -71,15 +56,21 @@
 
 a.newAlbumLink {
     display: flex;
+    font-family: 'Lora', serif;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     height: 100px;
     margin: 0 auto 40px auto;
-    font-size: 24px;
+    font-size: 32px;
     width: calc(100% - (100% - 640px) / 1.5);
     color: white;
-    background-color: #2274A5;
+    background-color: #0070c9;
+    background: -webkit-linear-gradient(#42a1ec,#0070c9);
+    background: -o-linear-gradient(#42a1ec,#0070c9);
+    background: -moz-linear-gradient(#42a1ec,#0070c9);
+    background: linear-gradient(#42a1ec,#0070c9);;
+    border-radius: 3px;
     text-decoration: none;
 }
 
@@ -93,8 +84,8 @@ box-shadow: 10px 10px 30px 0px rgba(0,0,0,0.2);
     width: 240px;
     height: 400px;
     margin-bottom: 40px;
+    background-color: rgba(0, 0, 0, .1);
     display: inline-block;
-    background-color: lightgray;
     padding: 40px;
     margin-left: calc((100% - 640px) / 3)
 }
@@ -131,43 +122,116 @@ box-shadow: 10px 10px 30px 0px rgba(0,0,0,0.2);
     box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.25);
 }
 
+.albumsName {
+    font-family: 'Roboto', sans-serif;
+    font-size: 28px;
+    margin-bottom: 20px;
+    width: 240px;
+    overflow-x: scroll;
+}
+
+a.albumsLink {
+    display: flex;
+    font-family: 'Roboto', sans-serif;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 300px 0 20px 0;
+    height: 50px;
+    font-size: 20px;
+    width: 100%;
+    color: white;
+    background-color: #0070c9;
+    background: -webkit-linear-gradient(#42a1ec,#0070c9);
+    background: -o-linear-gradient(#42a1ec,#0070c9);
+    background: -moz-linear-gradient(#42a1ec,#0070c9);
+    background: linear-gradient(#42a1ec,#0070c9);;
+    border-radius: 3px;
+    text-decoration: none;
+}
+
+.albumsDescription {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+}
+
 .albumImageBoard {
     float: left;
     width: 60vw;
-    height: calc(100vh - 100px);
-    overflow-y: scroll;
 }
 
-.shareBtn {
-    margin-top: 280px;
-    width: 75%;
+.albumPage {
+    margin-top: 40px;
+}
+
+.img {
+    width: 59vw;
+    margin-left: .5vw;
+    margin-right: .5vw;
+    margin-bottom: calc(.5vw - 5px);
+}
+
+.mapRelative {
+    position: relative !important;
+    float: right !important;
+}
+
+.mapFixed {
+    position: fixed !important;
+    left: 60vw !important;
+    top: 0 !important;
+}
+
+h2 {
+    text-align: center;
+    font-size: 32px;
+    margin: 20px auto;
+}
+
+.dropZone {
+    background-color: rgba(0, 0, 0, .1);
+    width: 60%;
+    margin: 5vw auto;
+    height: calc(200px + 100vw * .1);
+    border: 2px dashed #0070c9;
+    border-radius: 3px;
+}
+
+.inputBox {
+    display: block;
+    width: 60%;
+    margin: .5vw auto;
+    height: 50px;
+    font-size: 20px;
+    border-radius: 3px;
+    border: 2px solid #0070c9;
+}
+
+.btn {
+    display: block;
+    width: 60.5%;
     color: white;
-    background-color: blue;
-    padding: 30px;
+    background-color: #0070c9;
+    background: -webkit-linear-gradient(#42a1ec,#0070c9);
+    background: -o-linear-gradient(#42a1ec,#0070c9);
+    background: -moz-linear-gradient(#42a1ec,#0070c9);
+    background: linear-gradient(#42a1ec,#0070c9);;
+    border-radius: 3px;
+    height: 50px;
+    border: none;
+    margin: .5vw auto;
+    height: 100px;
+    font-size: 30px;
+}
+
+.newAlbumImage img {
+    display: block;
+    width: 60vw;
+    margin: 1vw auto
 }
 
 @media screen and (min-width: 1001px) {
 
-    .headerDiv {
-        height: 150px;
-    }
-
-    .headerText {
-        height: 145px;
-    }
-
-    .headerDiv h1 {
-        font-size: 40px;
-    }
-
-    .navbar {
-        height: 145px;
-    }
-
-    .imageBoard{
-        width: 1000px;
-        margin: 0 auto 100px auto;
-    }
 
     a.newAlbumLink {
         width: 270px;
@@ -191,11 +255,40 @@ box-shadow: 10px 10px 30px 0px rgba(0,0,0,0.2);
         padding: 40px;
         margin-left: calc((100% - 960px) / 4)
     }
+
+    .svgIcon {
+        width: 12.5vw;
+    }
+
+    .mapStyleWidth {
+        width: 50vw !important;
+    }
+
+    .mapStyle {
+        height: calc(100vh - 100vw * .125) !important;
+        left: 50vw !important;
+    }
+
+    .mapFixed {
+        position: fixed !important;
+        left: 50vw !important;
+        top: 0 !important;
+    }
+
+    .albumImageBoard {
+        width: 50vw !important;
+    }
+
+    .img {
+        width: 49vw;
+        margin-left: .5vw;
+        margin-left: .5vw;
+    }
 }
 
 @media screen and (max-width: 665px) {
 
-    .headerDiv h1 {
+    /*.headerDiv h1 {
         font-size: 24px;
         letter-spacing: 1px;
     }
@@ -203,6 +296,6 @@ box-shadow: 10px 10px 30px 0px rgba(0,0,0,0.2);
     .navbar a {
         font-size: 18px;
         padding: 10px;
-    }
+    }*/
 
 }

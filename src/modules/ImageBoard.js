@@ -34,7 +34,6 @@ export default class ImageBoard extends Component {
         this.setState({
             limit: this.state.limit+=12
         })
-        console.log(this.state.limit)
         APIManager.get('/api/image', {limit: this.state.limit}, (err, response) => {
             if(err){
                 let msg = err.message || err
@@ -62,7 +61,7 @@ export default class ImageBoard extends Component {
                       {this.state.images.map((image, i) => {
                           return (
                               <div className="responsive imgContainer" key={i} style={{}}>
-                                  <div className="img" style={{height: '10px'}}>
+                                  <div style={{height: '10px'}}>
                                       <a href={`/album/${image.albums._id}`} className="imgLink">
                                           <Image publicId={toPublicId(image.albums.images.url)} responsive className="imageBoardImage">
                                               <Transformation
@@ -79,7 +78,7 @@ export default class ImageBoard extends Component {
                   }
                   <Waypoint
                     onEnter={ () => this.loadMore()}
-                    bottomOffset='-400px'/>
+                    bottomOffset='-500px'/>
                 </CloudinaryContext>
             </div>
         )
