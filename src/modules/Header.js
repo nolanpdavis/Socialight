@@ -3,11 +3,6 @@ import actions from '../actions'
 import { connect } from 'react-redux'
 import { APIManager } from '../utils'
 import {Router, Route, Redirect, Link, withRouter } from 'react-router-dom'
-const ImagesIcon = require('../../styles/img/ImagesIconColor.svg')
-const AlbumsIcon = require('../../styles/img/AlbumsIconColor.svg')
-const LogOutIcon = require('../../styles/img/LogOutIconColor.svg')
-const SignUpIcon = require('../../styles/img/SignUpIconColor.svg')
-const LogInIcon = require('../../styles/img/LogInIconColor.svg')
 
 
 class AccountNav extends Component {
