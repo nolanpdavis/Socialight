@@ -226,6 +226,14 @@ input[type=text] {
     border: 1.5px solid #1a98ff;
 }
 
+p.pNote {
+    font-size: 12px;
+    color: rgba(0, 0, 0, .6);
+    width: 60%;
+    margin: .5vw auto;
+    font-family: 'Cabin', sans-serif;
+}
+
 .btn {
     display: block;
     width: 60.5%;

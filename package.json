@@ -5,6 +5,7 @@
   "scripts": {
     "start": "npm run build",
     "build": "webpack -w & nodemon server",
+    "prod": "webpack -p & nodemon server",
     "hot": "webpack-dev-server --hot"
   },
   "dependencies": {

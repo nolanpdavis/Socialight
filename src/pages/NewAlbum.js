@@ -56,7 +56,7 @@ class NewAlbum extends Component {
             let location = []
 
             if (res.body.image_metadata.GPSLongitude == undefined) {
-                const preLongitude = "-77.32960556"
+                const preLongitude = "-118.4912"
                 const longitude = JSON.parse(preLongitude)
                 location.push(longitude)
             }
@@ -69,7 +69,7 @@ class NewAlbum extends Component {
             }
 
             if (res.body.image_metadata.GPSLatitude == undefined) {
-                const preLatitude = "38.97130278"
+                const preLatitude = "34.0195"
                 const latitude = JSON.parse(preLatitude)
                 location.push(latitude)
             }
@@ -151,6 +151,7 @@ class NewAlbum extends Component {
                 <Header />
                 <h2>Create New Album</h2>
                 <input className="inputBox" onChange={this.updateAlbumName.bind(this)} type="text" id="name" placeholder="Album Name" />
+                <p className="pNote">Note: image geolocation currently only availbe for photos taken with an iPhone</p>
                     <Dropzone  className="dropZone" onDrop={this.uploadFiles.bind(this)}/>
                     <CloudinaryContext  cloudName="djswgrool" fetchFormat="auto" >
                           {this.state.images.map((image, i) => {
