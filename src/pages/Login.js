@@ -22,6 +22,7 @@ class Login extends Component {
             if(err){
                 let msg = err.message || err
                 console.log(msg)
+                alert(msg)
                 return
             }
 
