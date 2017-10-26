@@ -3,15 +3,10 @@ import { Header, ImageBoard, AccountNav, AlbumBoard } from '../modules'
 import {Router, Route, Redirect, Link, withRouter } from 'react-router-dom'
 import { APIManager } from '../utils'
 import ReactDOM from 'react-dom'
+import { Map, Marker, Popup, Tooltip, TileLayer } from 'react-leaflet'
 import {Image, CloudinaryContext, Transformation} from 'cloudinary-react';
 import { compose, withProps, lifecycle } from "recompose";
 const Waypoint = require('react-waypoint');
-import {
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  Marker
-} from "react-google-maps";
 
 
 export default class Album extends Component {
@@ -26,7 +21,8 @@ export default class Album extends Component {
             images: [],
             center: { lat: 25.03, lng: 121.6 },
             limit: 6,
-            fixed: false
+            fixed: false,
+            zoom: 12
         }
     }
 
@@ -64,6 +60,13 @@ export default class Album extends Component {
         })
     }
 
+    handleOnZoom(){
+        const zoomLevel = this.refs.map.leafletElement.getZoom()
+        this.setState({
+          zoom: zoomLevel
+        })
+    }
+
     loadMore(){
         this.setState({
             limit: this.state.limit+=3
@@ -98,34 +101,19 @@ export default class Album extends Component {
 
     render(){
 
-        const Map = compose(
-              withProps({
-                googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyAsv9Hz2-CqDOgrb4FBSkfC-4aTiJL13cI",
-                loadingElement: <div style={{ height: `100%` }} />,
-                containerElement: <div className="mapStyle" className={(this.state.fixed) ? "mapFixed" : "mapRelative"} style={{height: `100vh`, float: `right`}} />,
-                mapElement: <div className="mapStyleWidth" style={{ width: `40vw`, height: `100%`}} />,
-                center: this.state.center,
-              }),
-              withScriptjs,
-              withGoogleMap,
-            )(props =>
-              <GoogleMap
-                defaultZoom={14}
-                defaultCenter={props.center}
-              >
-              {this.state.images.map((image, i) => {
-                  return (
-                      <Marker key={i}
-                          position={this.toLatLng(image.albums.images.location)}
-                      />
-                  )
-              })}
-              </GoogleMap>
-            );
-
-
         const toPublicId = (image) => {
             return image.slice(62, image.length)
+        }
+
+        const fixedStyle = {
+            position: 'fixed',
+            left: '60vw',
+            top: '0px'
+        }
+
+        const relativeStyle = {
+            position: 'relative',
+            float: 'right'
         }
 
 
@@ -135,7 +123,23 @@ export default class Album extends Component {
                 <Waypoint
                     onEnter={ () => this.toRelative() }
                     onLeave={ () => this.toFixed() }/>
-                <Map />
+                <Map center={this.state.center} onZoomend={this.handleOnZoom.bind(this)} zoom={this.state.zoom} useFlyTo={true} ref="map" style={(this.state.fixed) ? fixedStyle : relativeStyle}>
+                            <TileLayer
+                              attribution='Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.'
+                              url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+                            />
+                            <TileLayer
+                              attribution='Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.'
+                              url='https://stamen-tiles-{s}.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png'
+                            />
+                                {this.state.images.map((image, i) => {
+                                    return (
+                                        <Marker key={i}
+                                            position={this.toLatLng(image.albums.images.location)}
+                                        />
+                                    )
+                                })}
+                        </Map>
                 <div className="albumImageBoard">
                     <CloudinaryContext  cloudName="djswgrool" fetchFormat="auto" >
                       <div className="image-holder" ref="imgDiv">

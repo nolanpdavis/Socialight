@@ -184,6 +184,12 @@ a.albumsLink {
     margin-bottom: calc(.5vw - 5px);
 }
 
+.leaflet-container {
+height: 100vh;
+width: 40vw;
+float: right;
+}
+
 .mapRelative {
     position: relative !important;
     float: right !important;
