@@ -5,7 +5,6 @@ import { APIManager } from '../utils'
 import ReactDOM from 'react-dom'
 import { Map, Marker, Popup, Tooltip, TileLayer } from 'react-leaflet'
 import {Image, CloudinaryContext, Transformation} from 'cloudinary-react';
-import { compose, withProps, lifecycle } from "recompose";
 const Waypoint = require('react-waypoint');
 
 
