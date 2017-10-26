@@ -106,7 +106,7 @@ export default class Album extends Component {
 
         const fixedStyle = {
             position: 'fixed',
-            left: '60vw',
+            right: '0px',
             top: '0px'
         }
 
