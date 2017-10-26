@@ -297,15 +297,10 @@ p.pNote {
         width: 50vw !important;
     }
 
-    .mapStyle {
-        height: calc(100vh - 100vw * .125) !important;
-        left: 50vw !important;
-    }
-
-    .mapFixed {
-        position: fixed !important;
-        left: 50vw !important;
-        top: 0 !important;
+    .leaflet-container {
+    height: 100vh;
+    width: 50vw;
+    float: right;
     }
 
     .albumImageBoard {
